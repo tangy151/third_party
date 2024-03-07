@@ -1,0 +1,141 @@
+#!/bin/bash
+# 清空上次的编译
+make clean
+#你自己的NDK路径.
+export NDK=/home/feng/Android/Sdk/ndk/20.0.5594570
+
+TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/linux-x86_64
+
+SYSROOT=$TOOLCHAIN/sysroot
+
+#目标android版本
+ANDROID_API=21
+export CFLAGS="-D__ANDROID_API__=$ANDROID_API"
+export CXXFLAGS="-D__ANDROID_API__=$ANDROID_API"
+
+function build_android
+{
+echo "Compiling FFmpeg for $CPU"
+./configure \
+    --disable-x86asm \
+    --prefix=$PREFIX \
+    --enable-neon \
+    --enable-hwaccels \
+    --enable-gpl \
+    --enable-postproc \
+    --disable-shared \
+    --enable-static \
+    --enable-jni \
+    --enable-mediacodec \
+    --enable-decoder=h264_mediacodec \
+    --disable-doc \
+    --enable-ffmpeg \
+    --disable-ffplay \
+    --disable-ffprobe \
+    --enable-avdevice \
+    --disable-doc \
+    --disable-symver \
+    --cross-prefix=$CROSS_PREFIX \
+    --cc=${ANDROID_CROSS_PREFIX}-clang \
+    --target-os=android \
+    --arch=$ARCH \
+    --cpu=$CPU \
+    --enable-cross-compile \
+    --sysroot=$SYSROOT \
+    $ADDITIONAL_CONFIGURE_FLAG
+make clean
+make -j8
+make install
+echo "The Compilation of FFmpeg for $CPU is completed"
+}
+
+#armv8-a
+ARCH=arm64
+CPU=armv8-a
+CROSS_PREFIX=$TOOLCHAIN/bin/aarch64-linux-android-
+ANDROID_CROSS_PREFIX=$TOOLCHAIN/bin/aarch64-linux-android$ANDROID_API
+PREFIX=$(pwd)/android/$CPU
+build_android
+
+#armv7-a
+ARCH=arm
+CPU=armv7-a
+CROSS_PREFIX=$TOOLCHAIN/bin/arm-linux-androideabi-
+ANDROID_CROSS_PREFIX=$TOOLCHAIN/bin/armv7a-linux-androideabi$ANDROID_API
+PREFIX=$(pwd)/android/$CPU
+build_android
+
+#x86
+ARCH=x86
+CPU=x86
+CROSS_PREFIX=$TOOLCHAIN/bin/i686-linux-android-
+ANDROID_CROSS_PREFIX=$TOOLCHAIN/bin/i686-linux-android$ANDROID_API
+PREFIX=$(pwd)/android/$CPU
+build_android
+
+#x86_64
+ARCH=x86_64
+CPU=x86-64
+CROSS_PREFIX=$TOOLCHAIN/bin/x86_64-linux-android-
+ANDROID_CROSS_PREFIX=$TOOLCHAIN/bin/x86_64-linux-android$ANDROID_API
+PREFIX=$(pwd)/android/$CPU
+build_android/
+
+//============================================================================
+
+//Linux环境下 编译 x264
+./configure --enable-shared --prefix=/usr/
+make -j32
+make install
+
+
+//Linux环境下 编译 x265
+cd x265/build/linux/
+./make-Makefiles.bash
+make -j32
+make install
+ 
+//Linux环境下 编译 fdk-aac
+./autogen.sh
+./configure --enable-shared --prefix=/usr/
+make -j32
+make install
+
+
+
+
+//Linux环境下 编译ffmpeg
+./configure --prefix=/usr/local/ --enable-shared --disable-static --disable-programs --disable-ffplay --disable-ffmpeg --disable-ffprobe    --enable-libx264 --enable-gpl --enable-libfdk-aac --enable-nonfree --enable-libx265
+
+./configure --prefix=/usr/ --enable-shared --disable-static --disable-programs --disable-ffplay --disable-ffmpeg --disable-ffprobe    --enable-libx264 --enable-gpl --enable-libfdk-aac --enable-nonfree --enable-libx265
+
+
+./configure --prefix=/usr/ --enable-shared --disable-static --disable-programs --disable-ffplay --disable-ffmpeg --disable-ffprobe  --enable-gpl --enable-libfdk-aac --enable-nonfree --enable-libx265
+
+./configure --prefix=/usr/ --enable-shared --disable-static --disable-programs --disable-ffplay --disable-ffmpeg --disable-ffprobe --enable-gpl  --enable-libx264
+
+./configure --prefix=/usr/ --enable-shared --disable-static --disable-programs --disable-ffplay --disable-ffmpeg --disable-ffprobe --enable-gpl  
+
+ 
+
+//window 环境下 编译ffmpeg
+
+
+CC=cl.exe ./configure --prefix=./install_dir --toolchain=msvc  --enable-shared --disable-static --disable-programs --disable-ffplay --disable-ffmpeg --disable-ffprobe  --enable-gpl --enable-libfdk-aac --enable-nonfree --enable-libx264 --enable-libx265 --enable-hwaccel=h264_d3d11va --enable-hwaccel=h264_d3d11va2 --enable-hwaccel=h264_dxva2
+
+
+
+//libxml 编译方法
+./configure --build=
+
+
+
+
+
+
+
+
+
+
+
+
