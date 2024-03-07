@@ -1,1 +1,1 @@
-一些 开源库的编译方法,基于window /linux
+一些 开源库的编译方法,基于window /linux 方法 
