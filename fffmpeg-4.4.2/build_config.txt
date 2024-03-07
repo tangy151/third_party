@@ -1,0 +1,27 @@
+
+仅支持 软解 H264，dxva2 和 dx11 硬解 H264。
+
+./configure --toolchain=msvc --prefix=./install_bin\
+--enable-shared --disable-static\
+--disable-autodetect --disable-everything\
+--enable-avdevice --enable-avfilter --enable-gpl\
+--enable-doc --disable-programs --enable-postproc --enable-debug\
+--disable-alsa --disable-appkit --disable-avfoundation\
+--disable-coreimage --disable-iconv --disable-xlib --disable-zlib --disable-bzlib\
+--disable-os2threads --disable-pthreads --enable-w32threads --disable-network\
+--enable-runtime-cpudetect\
+--enable-libx24 --enable-libx265\
+--enable-gpl --enable-libfdk-aac --enable-nonfree\
+--enable-hwaccel=h264_d3d11va --enable-hwaccel=h264_d3d11va2 --enable-hwaccel=h264_dxva2\
+--enable-d3d11va --enable-dxva2 \
+--enable-x86asm --enable-asm --enable-inline-asm --enable-avx2 --enable-avx512 --enable-avx\
+--enable-sse --enable-sse2 --enable-sse3 --enable-ssse3 --enable-sse4 --enable-sse42\
+--enable-mmx --enable-mmxext \
+--enable-parser=h264 --enable-decoder=h264
+
+make -j $(nproc)
+make install
+
+
+CC=cl.exe ./configure --prefix=./install_bin --toolchain=msvc --arch=x64 --enable-shared --disable-static --enable-libx264 --enable-libx265 --enable-gpl --enable-libfdk-aac --enable-nonfree --disable-programs --disable-ffplay --disable-ffmpeg --disable-ffprobe
+ 
